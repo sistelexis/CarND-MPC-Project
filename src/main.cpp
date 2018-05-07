@@ -1,3 +1,4 @@
+//current
 #include <math.h>
 #include <uWS/uWS.h>
 #include <chrono>
@@ -120,9 +121,9 @@ int main() {
 		  auto coeffs = polyfit(ptsx_transform, ptsy_transform, 3);
 		  
 		  //calculate cte e epsi
-		  double cte = polyeval(coeffs, 0);
+		  const double cte = polyeval(coeffs, 0);
 		  //double epsi = psi - atan(coeffs[1] + 2 * coeffs[2] * px + 3 * coeffs[3] * pow(px, 2));
-		  double epsi = - atan(coeffs[1]); // simplified since psi=0 and px=0
+		  const double epsi = - atan(coeffs[1]); // simplified since psi=0 and px=0
 		  
 		  Eigen::VectorXd state(6);
 		  // Without delay
