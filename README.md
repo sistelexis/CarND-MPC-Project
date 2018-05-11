@@ -99,6 +99,8 @@ For this project the latenty as been established as being 100 milliseconds, so w
 
 The car manages to complete one or more laps without leaving the track. The car reached a maximum speed of 93 mph (around 150 kph).
 
+### Final notes
 
+Finally a big thank you to all the forum members and also to Aaron and Dom and their very helpfull recorded project Q&A that helped a lot getting things on track.
 
 
