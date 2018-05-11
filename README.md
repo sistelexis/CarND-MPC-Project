@@ -25,8 +25,6 @@ The code compiles as expected.
 
 #### Student describes their model in detail. This includes the state, actuators and update equations.
 
-##### Please submit a write up to describe your MPC model which include the states, actuators and update equations.
-
 This project uses the very simple kinematic model that doesn't consider most of the details that would make it real, but within certain limits (speed, and steering angles), it can be very close to it and be considered good enough.
 
 To make it very simple, it might be seen as 4 interconnected wheels, so the only parameter that is car related, is the distance between those wheels (wheelbase and axle width), that will be represented by the parameter Lf (sim car has a Lf value of 2.67).
@@ -52,20 +50,11 @@ Update equations:
 
 #### Student discusses the reasoning behind the chosen N (timestep length) and dt (elapsed duration between timesteps) values. Additionally the student details the previous values tried.
 
-##### After trying different values, you should also try to give the reasoning behind your values e.g. explaining why some values work better than others. You can try answering the following questions:
-
-##### Why smaller dt is better? (finer resolution)
-##### Why larger N isn't always better? (computational time)
-##### How does time horizon (N*dt) affect the predicted path? This relates to the car speed too.
-##### The most popular choice is N=10, dt=0.1 which is a good starting point for experimenting other values.
-
 Ideally, the further we know the future and the more often we calculate it, the better. But all this comes with a price that is a high processing load. On the other hand, the further we move into the future, new information tends to add a very small value to our knowledge.
 
 So the aim here will be to find a good balance between both. That balance will depende mostly on the processing power of the computer running the simulation. Time-wise, it could be good to have a vision of the next few seconds to allow anticipation (More than that will be useless). Then the computer limitations will dictate the balance, that in my case was around 1 second. Having a time horizon T of 1 second, we can set delta_t to 100 miliseconds and the number of points to 10 (T = N*dt = 10*0.1 = 1). Increasing the horizon, or increasing the steps, didn't produce good results on my computer. Tweeking the weights helped achieving a better result, but never as stable in long runs as the 1 second horizon and 0.1 step.
 
 #### A polynomial is fitted to waypoints. If the student preprocesses waypoints, the vehicle state, and/or actuators prior to the MPC procedure it is described.
-
-##### Please describe how you pre-process the waypoints e.g. coordinate transform.
 
 In order to have usable values, it is wise to transform the waypoints coordinates to the car coodinates.
 The transformation is done this way (main.cpp line 106 to 113):
@@ -88,17 +77,25 @@ The transformation is done this way (main.cpp line 106 to 113):
 
 #### The student implements Model Predictive Control that handles a 100 millisecond latency. Student provides details on how they deal with latency.
 
-##### You have chosen a correct method - predict new states and they have been implemented correctly. Now we would love to hear about the details in the write up.
-
 The time between a decision and when it is implemented is never 0. Trying to explain in a funny way, if you do not antecipate when you need to park your car in your house driveway, you will end up most likely parking the car at your neighbour's. That will be called latency.
 The approach to workaround the latency is to anticipate where the car would most likely be after that latency time and predict as if the car would already be there.
 For this project the latenty as been established as being 100 milliseconds, so we will jump 0.1 secs ahead in time to predict the trajectory of the car.
 
+		  double delayed_x = v * delay_t;
+		  
+		  double delayed_y = 0;
+		  
+		  double delayed_psi = - v * steer_value / Lf * delay_t;
+		  
+		  double delayed_v = v + throttle_value * delay_t;
+		  
+		  double delayed_cte = cte + v * sin(epsi) * delay_t;
+		  
+		  double delayed_epsi = epsi - v * steer_value / Lf * delay_t;
+
 ### Simulation
 
 #### No tire may leave the drivable portion of the track surface. The car may not pop up onto ledges or roll over any surfaces that would otherwise be considered unsafe (if humans were in the vehicle).
-
-##### The car can't go over the curb, but, driving on the lines before the curb is ok.
 
 The car manages to complete one or more laps without leaving the track. The car reached a maximum speed of 93 mph (around 150 kph).
 
